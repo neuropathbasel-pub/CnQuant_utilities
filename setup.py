@@ -5,7 +5,7 @@ with open(file='README.md') as f:
 
 setup(
     name='cnv_apps_utilities',
-    version='0.1.11',
+    version='0.1',
     packages=find_packages(),
     install_requires=[
     ],

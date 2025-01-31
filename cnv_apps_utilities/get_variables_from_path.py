@@ -2,7 +2,43 @@ import os
 import sys
 from pathlib import Path
 from typing import Optional
-from .get_variables_from_path import log_error
+from .logger_setup import log_error
+
+def get_log_directory(env_variable: str):
+    """
+    Retrieve the log directory path from a specified environment variable.
+
+    This function looks up an environment variable by name, checks if it's set,
+    verifies if the path exists, and returns it as a `Path` object. If the 
+    environment variable is not set, it defaults to the current directory (".").
+    If the path specified by the environment variable does not exist, it raises 
+    a `ValueError`.
+
+    Args:
+        env_variable (str): The name of the environment variable to look up for 
+                            the log directory path.
+
+    Returns:
+        Path: A `Path` object representing the directory where logs should be 
+              stored, either from the environment variable or the current directory.
+
+    Raises:
+        ValueError: If the environment variable is set but the path does not exist.
+
+    Note:
+        - This function does not create the directory if it doesn't exist; it only 
+          checks for its existence.
+        - The current directory is used as a fallback when the environment variable 
+          is not set.
+    """
+    log_directory: Optional[str] = os.getenv(key=env_variable)
+
+    if log_directory is None:
+        log_directory = "."
+    else:
+        if not os.path.exists(path=log_directory):
+            raise ValueError(f"Environment variable {env_variable} does not exist.")
+    return Path(log_directory)
 
 def get_path_from_env(value: str) -> Path:
     """
@@ -38,11 +74,11 @@ def get_path_from_env(value: str) -> Path:
     if env_value is None: 
         error_message = f"Error: {value} environment variable not set!"
         print(error_message, file=sys.stdout)
-        log_error(error_message)
+        log_error(message=error_message)
         raise ValueError(error_message)
     
     path = Path(env_value)
-    if not os.path.exists(env_value):
+    if not os.path.exists(path=env_value):
         error_message = f"Path set in .env file {env_value} does not exist."
         print(error_message, file=sys.stdout)
         log_error(message=error_message)
@@ -73,10 +109,13 @@ def get_integer_from_env(value: str, default_value: int = 300) -> int:
         - If the environment variable does not exist (i.e., `env_value` is `None`), 
           or if it cannot be converted to an integer, an error is logged but 
           no exception is raised; the default value is returned instead.
-        - Errors are logged using a `log_error` function which should be defined 
-          or imported elsewhere in your code.
     """
-    env_value: Optional[str] = os.getenv(value)
+    env_value: Optional[str] = os.getenv(key=value)
+
+    if env_value is None:
+        error_message = f"Error: {value} environment variable '{env_value}' is not a valid integer. Defaulting to {default_value}."
+        log_error(message=error_message)
+        return default_value
    
     try:
         return int(env_value)
@@ -110,7 +149,7 @@ def get_string_from_env(value: str) -> str:
           visibility and debugging.
     """
 
-    env_value = os.getenv(value)
+    env_value = os.getenv(key=value)
 
     if env_value is None: 
         error_message = f"Error: {value} environment variable not set!"
