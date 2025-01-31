@@ -40,7 +40,7 @@ def get_log_directory(env_variable: str):
             raise ValueError(f"Environment variable {env_variable} does not exist.")
     return Path(log_directory)
 
-def get_path_from_env(value: str) -> Path:
+def get_path_from_env(env_variable: str) -> Path:
     """
     Retrieve a file system path from an environment variable.
 
@@ -51,7 +51,7 @@ def get_path_from_env(value: str) -> Path:
     stdout and logged.
 
     Args:
-        value (str): The name of the environment variable to look up.
+        env_variable (str): The name of the environment variable to look up.
 
     Returns:
         Path: A `Path` object representing the file system path from the 
@@ -69,10 +69,10 @@ def get_path_from_env(value: str) -> Path:
           must exist before this function can return successfully.
     """
 
-    env_value = os.getenv(value)
+    env_value = os.getenv(env_variable)
 
     if env_value is None: 
-        error_message = f"Error: {value} environment variable not set!"
+        error_message = f"Error: {env_variable} environment variable not set!"
         print(error_message, file=sys.stdout)
         log_error(message=error_message)
         raise ValueError(error_message)
@@ -86,7 +86,7 @@ def get_path_from_env(value: str) -> Path:
     
     return path
 
-def get_integer_from_env(value: str, default_value: int = 300) -> int:
+def get_integer_from_env(env_variable: str, default_value: int = 300) -> int:
     """
     Retrieve an integer from an environment variable, with a fallback to a default value.
 
@@ -96,7 +96,7 @@ def get_integer_from_env(value: str, default_value: int = 300) -> int:
     value.
 
     Args:
-        value (str): The name of the environment variable to look up.
+        env_variable (str): The name of the environment variable to look up.
         default_value (int, optional): The value to return if the environment 
                                        variable's value cannot be converted 
                                        to an integer. Defaults to 300.
@@ -110,21 +110,21 @@ def get_integer_from_env(value: str, default_value: int = 300) -> int:
           or if it cannot be converted to an integer, an error is logged but 
           no exception is raised; the default value is returned instead.
     """
-    env_value: Optional[str] = os.getenv(key=value)
+    env_value: Optional[str] = os.getenv(key=env_variable)
 
     if env_value is None:
-        error_message = f"Error: {value} environment variable '{env_value}' is not a valid integer. Defaulting to {default_value}."
+        error_message = f"Error: {env_variable} environment variable '{env_variable}' is not a valid integer. Defaulting to {default_value}."
         log_error(message=error_message)
         return default_value
    
     try:
         return int(env_value)
     except ValueError:
-        error_message = f"Error: {value} environment variable '{env_value}' is not a valid integer. Defaulting to {default_value}."
+        error_message = f"Error: {env_variable} environment variable '{env_variable}' is not a valid integer. Defaulting to {default_value}."
         log_error(message=error_message)
         return default_value
     
-def get_string_from_env(value: str) -> str:
+def get_string_from_env(env_variable: str) -> str:
     """
     Retrieve a string value from an environment variable.
 
@@ -149,10 +149,10 @@ def get_string_from_env(value: str) -> str:
           visibility and debugging.
     """
 
-    env_value = os.getenv(key=value)
+    env_value = os.getenv(key=env_variable)
 
     if env_value is None: 
-        error_message = f"Error: {value} environment variable not set!"
+        error_message = f"Error: {env_variable} environment variable not set!"
         log_error(message=error_message)
         print(error_message, file=sys.stdout)
         raise ValueError(error_message)
