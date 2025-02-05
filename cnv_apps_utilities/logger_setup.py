@@ -2,6 +2,13 @@ import logging
 from logging.handlers import RotatingFileHandler
 from pathlib import Path
 
+class ColoredFormatter(logging.Formatter):
+        def format(self, record):
+            if record.levelno == logging.ERROR:
+                return f"\033[31m{super().format(record)}\033[0m"
+            else:
+                return super().format(record)
+
 def setup_logger(log_directory: Path, log_file_name: str):
     """
     Configure and return a logger with file rotation and console output.
@@ -47,7 +54,8 @@ def setup_logger(log_directory: Path, log_file_name: str):
 
     formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
     file_handler.setFormatter(formatter)
-    console_handler.setFormatter(formatter)
+    console_formatter = ColoredFormatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+    console_handler.setFormatter(console_formatter)
 
     logger.addHandler(file_handler)
     logger.addHandler(console_handler)
