@@ -113,7 +113,7 @@ def get_integer_from_env(env_variable: str, default_value: int = 300) -> int:
     env_value: Optional[str] = os.getenv(key=env_variable)
 
     if env_value is None:
-        error_message = f"Error: {env_variable} environment variable '{env_variable}' is not a valid integer. Defaulting to {default_value}."
+        error_message = f"Error: {env_variable} environment variable has not been set in .env file. Defaulting to {default_value}."
         log_error(message=error_message)
         return default_value
    
@@ -158,3 +158,40 @@ def get_string_from_env(env_variable: str) -> str:
         raise ValueError(error_message)
     
     return env_value
+
+def get_boolean_from_env(env_variable: str, default_value: bool) -> bool:
+    """
+    Retrieve a boolean value from an environment variable.
+
+    This function checks if the specified environment variable is set, attempts to convert its value to a boolean,
+    and returns the boolean value or a default if conversion fails or the variable is not set.
+
+    Args:
+        env_variable (str): The name of the environment variable to check.
+        default_value (bool): The value to return if the environment variable is not set or cannot be converted to a boolean.
+
+    Returns:
+        bool: The boolean value of the environment variable or the default value if conversion fails.
+
+    Raises:
+        Logs an error message if:
+        - The environment variable is not set or
+        - The value of the environment variable cannot be interpreted as a boolean.
+
+    Note:
+        - 'True' (case insensitive) will be interpreted as `True`, anything else as `False`.
+        - This function uses `os.getenv` to fetch the environment variable, which returns `None` if the variable does not exist.
+    """
+    env_value: Optional[str] = os.getenv(key=env_variable)
+
+    if env_value is None:
+        error_message = f"Error: {env_variable} environment variable has not been set in .env file. Defaulting to {default_value}."
+        log_error(message=error_message)
+        return default_value
+
+    try:
+        return bool(env_value)
+    except ValueError:
+        error_message = f"Error: {env_variable} environment variable '{env_variable}' is not a valid boolean. Defaulting to {default_value}."
+        log_error(message=error_message)
+        return default_value
