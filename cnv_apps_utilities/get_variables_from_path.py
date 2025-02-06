@@ -189,9 +189,12 @@ def get_boolean_from_env(env_variable: str, default_value: bool) -> bool:
         log_error(message=error_message)
         return default_value
 
-    try:
-        return bool(env_value)
-    except ValueError:
-        error_message = f"Error: {env_variable} environment variable '{env_variable}' is not a valid boolean. Defaulting to {default_value}."
+    lower_env_value = env_value.lower()
+    if lower_env_value in ('true', '1', 'yes', 'on'):
+        return True
+    elif lower_env_value in ('false', '0', 'no', 'off'):
+        return False
+    else:
+        error_message = f"Error: {env_variable} environment variable '{env_value}' is not a valid boolean. Defaulting to {default_value}."
         log_error(message=error_message)
         return default_value
