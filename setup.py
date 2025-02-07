@@ -8,6 +8,7 @@ setup(
     version='0.1',
     packages=find_packages(),
     install_requires=[
+        "orjson==3.10.12",
     ],
     author='Benjamin Freyter',
     author_email='benjaminmaciej.freyter@usb.ch',
