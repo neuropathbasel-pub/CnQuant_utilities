@@ -86,7 +86,7 @@ def get_path_from_env(env_variable: str) -> Path:
     
     return path
 
-def get_integer_from_env(env_variable: str, default_value: int = 300) -> int:
+def get_integer_from_env(env_variable: str, default_value: int) -> int:
     """
     Retrieve an integer from an environment variable, with a fallback to a default value.
 
@@ -99,7 +99,7 @@ def get_integer_from_env(env_variable: str, default_value: int = 300) -> int:
         env_variable (str): The name of the environment variable to look up.
         default_value (int, optional): The value to return if the environment 
                                        variable's value cannot be converted 
-                                       to an integer. Defaults to 300.
+                                       to an integer.
 
     Returns:
         int: The integer value from the environment variable if conversion is 
@@ -121,6 +121,47 @@ def get_integer_from_env(env_variable: str, default_value: int = 300) -> int:
         return int(env_value)
     except ValueError:
         error_message = f"Error: {env_variable} environment variable '{env_variable}' is not a valid integer. Defaulting to {default_value}."
+        log_error(message=error_message)
+        return default_value
+    
+def get_float_from_env(env_variable: str, default_value: float) -> float:
+    """
+    Retrieve a float value from an environment variable, with a default fallback.
+
+    This function attempts to read and convert an environment variable to a float. If the 
+    variable is not set or cannot be converted to a float, it logs an error and returns 
+    the provided default value.
+
+    Parameters:
+    - env_variable (str): The name of the environment variable to look up.
+    - default_value (float): The default float value to return if the environment variable 
+                             is not set or not a valid float.
+
+    Returns:
+    - float: The float value from the environment variable, or the `default_value` if the 
+             variable is not set or invalid.
+
+    Raises:
+    - No exceptions are raised; errors are logged instead.
+
+    Notes:
+    - This function uses `os.getenv` to check for the environment variable.
+    - Errors are logged using a hypothetical `log_error` function which should be defined 
+      elsewhere in the codebase for logging purposes.
+    - The function does not modify the environment; it only reads from it.
+    """
+    
+    env_value: Optional[str] = os.getenv(key=env_variable)
+
+    if env_value is None:
+        error_message = f"Error: {env_variable} environment variable has not been set in .env file. Defaulting to {default_value}."
+        log_error(message=error_message)
+        return default_value
+   
+    try:
+        return float(env_value)
+    except ValueError:
+        error_message = f"Error: {env_variable} environment variable '{env_variable}' is not a valid float. Defaulting to {default_value}."
         log_error(message=error_message)
         return default_value
     
