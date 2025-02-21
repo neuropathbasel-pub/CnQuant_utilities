@@ -24,5 +24,5 @@ setup(
         'Programming Language :: Python :: 3.11',
         'Operating System :: Ubuntu 22.04',
     ],
-    python_requires='>=3.11',
+    python_requires='>=3.10',
 )
