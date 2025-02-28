@@ -34,8 +34,8 @@ def setup_logger(log_directory: Path, log_file_name: str):
         - If the `log_directory` does not exist, this function will raise an exception 
           when attempting to write logs.
     """
-    logger = logging.getLogger(__name__)
-    logger.setLevel(logging.INFO)
+    logger = logging.getLogger(name=__name__)
+    logger.setLevel(level=logging.INFO)
 
     file_handler = RotatingFileHandler(filename=log_directory/log_file_name, 
                                        maxBytes=1000000, 
@@ -45,16 +45,16 @@ def setup_logger(log_directory: Path, log_file_name: str):
     console_handler = logging.StreamHandler()
     console_handler.setLevel(logging.ERROR)
 
-    formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
-    file_handler.setFormatter(formatter)
-    console_handler.setFormatter(formatter)
+    formatter = logging.Formatter(fmt='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+    file_handler.setFormatter(fmt=formatter)
+    console_handler.setFormatter(fmt=formatter)
 
-    logger.addHandler(file_handler)
-    logger.addHandler(console_handler)
+    logger.addHandler(hdlr=file_handler)
+    logger.addHandler(hdlr=console_handler)
 
     return logger
 
-def log_error(message: str) -> None:
+def log_error(logger: logging.Logger, message: str) -> None:
     """
     Log an error message using Python's built-in logging system.
 
@@ -73,4 +73,4 @@ def log_error(message: str) -> None:
         - This method does not handle exceptions; it merely logs them.
         - The actual logging behavior depends on the configuration of the logging module.
     """
-    logging.error(msg=message)
+    logger.error(msg=message)
