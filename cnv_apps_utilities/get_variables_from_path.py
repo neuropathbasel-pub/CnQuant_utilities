@@ -1,5 +1,4 @@
 import os
-import sys
 from pathlib import Path
 from typing import Optional
 from .logger_setup import log_error
@@ -40,7 +39,7 @@ def get_log_directory(env_variable: str):
             raise ValueError(f"Environment variable {env_variable} does not exist.")
     return Path(log_directory)
 
-def get_path_from_env(env_variable: str) -> Path:
+def get_path_from_env(env_variable: str, logger) -> Path:
     """
     Retrieve a file system path from an environment variable.
 
@@ -73,20 +72,18 @@ def get_path_from_env(env_variable: str) -> Path:
 
     if env_value is None: 
         error_message = f"Error: {env_variable} environment variable not set!"
-        print(error_message, file=sys.stdout)
-        log_error(message=error_message)
+        log_error(logger=logger, message=error_message)
         raise ValueError(error_message)
     
     path = Path(env_value)
     if not os.path.exists(path=env_value):
         error_message = f"Path set in .env file {env_value} does not exist."
-        print(error_message, file=sys.stdout)
-        log_error(message=error_message)
+        log_error(logger=logger, message=error_message)
         raise ValueError(error_message)
     
     return path
 
-def get_integer_from_env(env_variable: str, default_value: int) -> int:
+def get_integer_from_env(env_variable: str, default_value: int, logger) -> int:
     """
     Retrieve an integer from an environment variable, with a fallback to a default value.
 
@@ -114,17 +111,17 @@ def get_integer_from_env(env_variable: str, default_value: int) -> int:
 
     if env_value is None:
         error_message = f"Error: {env_variable} environment variable has not been set in .env file. Defaulting to {default_value}."
-        log_error(message=error_message)
+        log_error(logger=logger, message=error_message)
         return default_value
    
     try:
         return int(env_value)
     except ValueError:
         error_message = f"Error: {env_variable} environment variable '{env_variable}' is not a valid integer. Defaulting to {default_value}."
-        log_error(message=error_message)
+        log_error(logger=logger, message=error_message)
         return default_value
     
-def get_float_from_env(env_variable: str, default_value: float) -> float:
+def get_float_from_env(env_variable: str, default_value: float, logger) -> float:
     """
     Retrieve a float value from an environment variable, with a default fallback.
 
@@ -155,17 +152,17 @@ def get_float_from_env(env_variable: str, default_value: float) -> float:
 
     if env_value is None:
         error_message = f"Error: {env_variable} environment variable has not been set in .env file. Defaulting to {default_value}."
-        log_error(message=error_message)
+        log_error(logger=logger, message=error_message)
         return default_value
    
     try:
         return float(env_value)
     except ValueError:
         error_message = f"Error: {env_variable} environment variable '{env_variable}' is not a valid float. Defaulting to {default_value}."
-        log_error(message=error_message)
+        log_error(logger=logger, message=error_message)
         return default_value
     
-def get_string_from_env(env_variable: str) -> str:
+def get_string_from_env(env_variable: str, logger) -> str:
     """
     Retrieve a string value from an environment variable.
 
@@ -194,13 +191,12 @@ def get_string_from_env(env_variable: str) -> str:
 
     if env_value is None: 
         error_message = f"Error: {env_variable} environment variable not set!"
-        log_error(message=error_message)
-        print(error_message, file=sys.stdout)
+        log_error(logger, message=error_message)
         raise ValueError(error_message)
     
     return env_value
 
-def get_boolean_from_env(env_variable: str, default_value: bool) -> bool:
+def get_boolean_from_env(env_variable: str, default_value: bool, logger) -> bool:
     """
     Retrieve a boolean value from an environment variable.
 
@@ -227,7 +223,7 @@ def get_boolean_from_env(env_variable: str, default_value: bool) -> bool:
 
     if env_value is None:
         error_message = f"Error: {env_variable} environment variable has not been set in .env file. Defaulting to {default_value}."
-        log_error(message=error_message)
+        log_error(logger=logger, message=error_message)
         return default_value
 
     lower_env_value = env_value.lower()
@@ -237,5 +233,5 @@ def get_boolean_from_env(env_variable: str, default_value: bool) -> bool:
         return False
     else:
         error_message = f"Error: {env_variable} environment variable '{env_value}' is not a valid boolean. Defaulting to {default_value}."
-        log_error(message=error_message)
+        log_error(logger=logger, message=error_message)
         return default_value
