@@ -39,35 +39,20 @@ def get_log_directory(env_variable: str):
             raise ValueError(f"Environment variable {env_variable} does not exist.")
     return Path(log_directory)
 
-def get_path_from_env(env_variable: str, logger, chech_if_exists: bool = True) -> Path:
-    """
-    Retrieve a file system path from an environment variable.
-
-    This function looks up an environment variable by name, checks if it's set,
-    verifies if the path exists, and returns it as a `Path` object. If the 
-    environment variable is not set or the path does not exist, it raises 
-    a `ValueError` with an informative message. Errors are both printed to 
-    stdout and logged.
-
+def get_path_from_env(env_variable: str, logger, check_if_exists: bool = True) -> Path:
+    """Retrieve a file path from an environment variable and validate it.
     Args:
-        env_variable (str): The name of the environment variable to look up.
+        env_variable (str): The name of the environment variable to retrieve.
+        logger: Logger object used to log error messages.
+        check_if_exists (bool, optional): If True, checks if the path exists. Defaults to True.
 
     Returns:
-        Path: A `Path` object representing the file system path from the 
-              environment variable.
+        Path: A pathlib.Path object representing the validated file path.
 
     Raises:
-        ValueError: 
-            - If the environment variable is not set.
-            - If the path specified by the environment variable does not exist.
-
-    Note:
-        - This function assumes the existence of a `log_error` function to 
-          log error messages. Ensure this function is defined or imported.
-        - It checks for path existence at the time of function call; the path 
-          must exist before this function can return successfully.
+        ValueError: If the environment variable is not set or if the path does not exist
+            when check_if_exists is True.
     """
-
     env_value = os.getenv(env_variable)
 
     if env_value is None: 
@@ -76,7 +61,7 @@ def get_path_from_env(env_variable: str, logger, chech_if_exists: bool = True) -
         raise ValueError(error_message)
     
     path = Path(env_value)
-    if chech_if_exists and not os.path.exists(path=env_value):
+    if check_if_exists and not os.path.exists(path=env_value):
         error_message = f"Path set in .env file {env_value} does not exist."
         log_error(logger=logger, message=error_message)
         raise ValueError(error_message)
