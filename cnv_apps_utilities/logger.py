@@ -45,9 +45,9 @@ class CustomLogger:
             self.logger.addHandler(hdlr=console_handler)
 
             # File handler
-            os.makedirs(os.path.dirname(log_file), exist_ok=True)
-            file_handler = logging.FileHandler(log_file)
-            file_handler.setLevel(log_level)
+            os.makedirs(name=os.path.dirname(p=log_file), exist_ok=True)
+            file_handler = logging.FileHandler(filename=log_file)
+            file_handler.setLevel(level=log_level)
             file_format = logging.Formatter(
                 fmt="%(asctime)s - %(name)s - %(levelname)s - %(message)s"
             )
