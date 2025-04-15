@@ -2,7 +2,7 @@ import logging
 import os
 from logging.handlers import SMTPHandler
 
-class CustomLogger:
+class Logger:
     def __init__(
         self,
         name: str,

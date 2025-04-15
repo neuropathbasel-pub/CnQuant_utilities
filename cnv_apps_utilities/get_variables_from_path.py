@@ -176,7 +176,7 @@ def get_string_from_env(env_variable: str, logger) -> str:
 
     if env_value is None: 
         error_message = f"Error: {env_variable} environment variable not set!"
-        log_warning(logger, message=error_message)
+        log_error(logger=logger, message=error_message)
         raise ValueError(error_message)
     
     return env_value
