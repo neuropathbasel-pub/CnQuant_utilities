@@ -17,7 +17,7 @@ class Logger:
         smtp_port: int = 587,
     ):
         """
-        # TODO: test it extensively
+        # TODO: test it extensively. Add checking for separator in email_to
         Initialize a logger with console, file, and email handlers.
         
         Args:
