@@ -146,7 +146,7 @@ def get_float_from_env(env_variable: str, default_value: float) -> float:
         print(f"Error: {env_variable} environment variable '{env_variable}' is not a valid float. Defaulting to {default_value}.")
         return default_value
     
-def get_string_from_env(env_variable: str) -> str:
+def get_string_from_env(env_variable: str, default_value: str = "", error_on_missing_value: bool = False) -> str:
     """
     Retrieve a string value from an environment variable.
 
@@ -158,8 +158,11 @@ def get_string_from_env(env_variable: str) -> str:
     Args:
         value (str): The name of the environment variable to look up.
 
+
     Returns:
         str: The string value from the environment variable.
+        - default_value (str): The default str value to return if the environment variable 
+                             is not set or not a valid str.
 
     Raises:
         ValueError: If the environment variable is not set.
@@ -171,12 +174,16 @@ def get_string_from_env(env_variable: str) -> str:
           visibility and debugging.
     """
 
-    env_value = os.getenv(key=env_variable)
+    env_value: Optional[str] = os.getenv(key=env_variable)
 
-    if env_value is None: 
+    if error_on_missing_value and env_value is None:
         raise EnvironmentVariableNotFoundError(variable_name=env_variable)
-    
-    return env_value
+
+    try:
+        return str(object=env_value)
+    except ValueError:
+        print(f"Error: {env_variable} environment variable '{env_variable}' is not a valid float. Defaulting to {default_value}.")
+        return default_value
 
 def get_boolean_from_env(env_variable: str, default_value: bool) -> bool:
     """
