@@ -1,12 +1,13 @@
 import logging
 import os
 from logging.handlers import SMTPHandler
+from pathlib import Path
 
 class Logger:
     def __init__(
         self,
         name: str,
-        log_file: str,
+        log_file: str | Path,
         log_level: int = logging.INFO,
         smtp_user: str = "",
         smtp_host: str = "",
