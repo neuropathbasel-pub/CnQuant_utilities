@@ -74,3 +74,24 @@ def log_error(logger: logging.Logger, message: str) -> None:
         - The actual logging behavior depends on the configuration of the logging module.
     """
     logger.error(msg=message)
+
+def log_warning(logger: logging.Logger, message: str) -> None:
+    """
+    Log an warning message using Python's built-in logging system.
+
+    This function acts as a wrapper around the `logging.warning` method to provide 
+    a consistent way to log warning throughout the application. It ensures that 
+    all warning messages are formatted and handled in the same manner, enhancing 
+    maintainability and debugging.
+
+    Args:
+        message (str): The warning message to be logged.
+
+    Returns:
+        None
+
+    Note:
+        - This method does not handle exceptions; it merely logs them.
+        - The actual logging behavior depends on the configuration of the logging module.
+    """
+    logger.warning(msg=message)
