@@ -60,7 +60,7 @@ class Logger:
                 email_handler = SMTPHandler(
                     mailhost=(smtp_host, smtp_port),
                     fromaddr=smtp_user,
-                    toaddrs=email_to.split(sep=","),
+                    toaddrs=email_to,
                     subject=email_subject,
                     credentials=(smtp_user, smtp_password),
                     secure=()
