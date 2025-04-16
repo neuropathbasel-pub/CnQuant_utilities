@@ -8,7 +8,7 @@ class Logger:
         self,
         name: str,
         log_file: str | Path | None = None,
-        file_log_level: str | None = "none",
+        file_log_level: str | None = "error",
         log_level: str = "info",
         smtp_user: str = "",
         smtp_host: str = "",
@@ -19,7 +19,6 @@ class Logger:
         log_level_for_emails: str = "critical"
     ):
         """
-        # TODO: test it extensively. Add checking for separator in email_to
         Initialize a logger with console, file, and email handlers.
         
         Args:
