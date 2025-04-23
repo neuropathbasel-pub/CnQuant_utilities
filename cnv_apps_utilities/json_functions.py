@@ -1,7 +1,6 @@
 import os
 import orjson
 from pathlib import Path
-from .logger_setup import log_error
 
 def load_analysis_status(status_json_path: str | Path, dictionary_status_entry_name: str) -> bool:
     """
@@ -39,10 +38,12 @@ def load_analysis_status(status_json_path: str | Path, dictionary_status_entry_n
     try:
         with open(file=path, mode='rb') as file:
             return orjson.loads(file.read()).get(dictionary_status_entry_name, False)
-    except orjson.JSONDecodeError:
-        log_error(message=f"Error decoding JSON from file: {path}")
-    except IOError as e:
-        log_error(message=f"IOError occurred when reading file {path}: {e}")
-    except Exception as e:
-        log_error(message=f"Unexpected error when processing {path}: {e}")
-    return False
+    except Exception:
+        return False
+    # except orjson.JSONDecodeError:
+    #     log_error(message=f"Error decoding JSON from file: {path}")
+    # except IOError as e:
+    #     log_error(message=f"IOError occurred when reading file {path}: {e}")
+    # except Exception as e:
+    #     log_error(message=f"Unexpected error when processing {path}: {e}")
+    # return False
