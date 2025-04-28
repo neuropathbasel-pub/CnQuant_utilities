@@ -86,7 +86,7 @@ class Logger:
                 YELLOW = "\033[93m"
                 MAGENTA = "\033[95m"
                 CYAN = "\033[96m"
-                ORANGE = "\033[33m"
+                ORANGE = "\033[38;5;208m"
                 RESET = "\033[0m"
 
                 def format(self, record):
