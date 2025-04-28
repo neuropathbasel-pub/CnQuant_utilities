@@ -106,9 +106,6 @@ class Logger:
             console_format = ColoredFormatter(
                 fmt="%(asctime)s - %(name)s - %(levelname)s - %(message)s"
             )
-            # console_format = logging.Formatter(
-            #     fmt="%(asctime)s - %(name)s - %(levelname)s - %(message)s"
-            # )
             console_handler.setFormatter(fmt=console_format)
             self.logger.addHandler(hdlr=console_handler)
 
