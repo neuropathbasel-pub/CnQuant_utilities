@@ -1,6 +1,5 @@
 import logging
 import os
-from colorama import Fore, Style, init
 from logging.handlers import SMTPHandler
 from pathlib import Path
 
@@ -80,17 +79,27 @@ class Logger:
         # Avoid duplicate handlers if logger is reused
         if not self.logger.handlers:
             class ColoredFormatter(logging.Formatter):
+                WHITE = "\033[97m"
+                GREEN = "\033[92m"
+                RED = "\033[91m"
+                BLUE = "\033[94m"
+                YELLOW = "\033[93m"
+                MAGENTA = "\033[95m"
+                CYAN = "\033[96m"
+                ORANGE = "\033[33m"
+                RESET = "\033[0m"
+
                 def format(self, record):
                     if record.levelno == logging.WARNING:
-                        color = Fore.YELLOW  # Orange for warnings
+                        color = self.ORANGE
                     elif record.levelno in [logging.ERROR, logging.CRITICAL]:
-                        color = Fore.RED  # Red for errors and critical
+                        color = self.RED
                     elif record.levelno == logging.INFO:
-                        color = Fore.GREEN  # Green for info
+                        color = self.GREEN
                     else:
-                        color = Fore.WHITE  # Default for debug
-                    record.msg = f"{color}{record.msg}{Style.RESET_ALL}"
-                    return super().format(record)
+                        color = ""
+                    record.msg = f"{color}{record.msg}{self.RESET}"
+                    return super().format(record=record)
             # Console handler
             console_handler = logging.StreamHandler()
             console_handler.setLevel(level=console_log_level)
