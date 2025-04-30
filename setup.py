@@ -4,7 +4,7 @@ with open(file='README.md') as f:
     readme = f.read()
 
 setup(
-    name='cnv_apps_utilities',
+    name='CnQuant_utilities',
     version='0.1',
     packages=find_packages(),
     install_requires=[
@@ -12,10 +12,10 @@ setup(
     ],
     author='Benjamin Freyter',
     author_email='benjaminmaciej.freyter@usb.ch',
-    description='Utilities for CNV apps',
+    description='Utilities for CnQuant apps',
     long_description=readme,
     long_description_content_type='text/markdown',
-    url='https://github.com/neuropathbasel-pub/CNV_apps_utilities',
+    url='https://github.com/neuropathbasel-pub/CnQuant_utilities',
     classifiers=[
         'Development Status :: 5 - Beta',
         'Intended Audience :: Research',
