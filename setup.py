@@ -5,7 +5,7 @@ with open(file='README.md') as f:
 
 setup(
     name='CnQuant_utilities',
-    version='1.0.1',
+    version='1.0.2',
     packages=find_packages(),
     install_requires=[
         "orjson==3.10.12",

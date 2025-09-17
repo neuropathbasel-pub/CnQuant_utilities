@@ -1,6 +1,11 @@
 import logging
 import orjson
-from logging.handlers import SMTPHandler, QueueHandler, QueueListener, RotatingFileHandler
+from logging.handlers import (
+    SMTPHandler,
+    QueueHandler,
+    QueueListener,
+    RotatingFileHandler,
+)
 from datetime import datetime
 from queue import Queue
 from pathlib import Path
@@ -10,11 +15,11 @@ class JsonFormatter(logging.Formatter):
     def format(self, record):
         # Format time as ISO 8601
         time_str = datetime.fromtimestamp(record.created).isoformat()
-        
+
         log_entry = {
             "time": time_str,
             "level": record.levelname,
-            "message": record.getMessage()
+            "message": record.getMessage(),
         }
         return orjson.dumps(log_entry)
 
@@ -30,7 +35,6 @@ class AsyncLogger:
     }
 
     def __init__(
-        
         self,
         name: str,
         log_file: str | Path | None = None,
@@ -67,7 +71,7 @@ class AsyncLogger:
             - Optionally sends critical logs via email if SMTP settings are provided.
             - Uses asynchronous queue handlers for thread-safe logging.
         """
-        
+
         self.logger = logging.getLogger(name=name)
         self.log_level = log_level.lower()
         self.log_level_for_emails: str = log_level_for_emails
@@ -110,11 +114,16 @@ class AsyncLogger:
         if log_file is not None:
             log_file_path = Path(log_file)
             log_file_path.parent.mkdir(parents=True, exist_ok=True)
-            file_handler = RotatingFileHandler(filename=log_file_path, mode='ab', maxBytes=self.max_log_file_size_MB * 1024 * 1024,backupCount=5)
+            file_handler = RotatingFileHandler(
+                filename=log_file_path,
+                mode="ab",
+                maxBytes=self.max_log_file_size_MB * 1024 * 1024,
+                backupCount=5,
+            )
             file_handler.setLevel(level=_file_log_level)
             file_format = JsonFormatter()
             file_handler.setFormatter(fmt=file_format)
-            file_handler.terminator = b'\n'  # type: ignore
+            file_handler.terminator = b"\n"  # type: ignore
             handlers.append(file_handler)
 
         # Email handler (async)
