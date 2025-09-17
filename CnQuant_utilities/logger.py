@@ -116,14 +116,14 @@ class AsyncLogger:
             log_file_path.parent.mkdir(parents=True, exist_ok=True)
             file_handler = RotatingFileHandler(
                 filename=log_file_path,
-                mode="ab",
+                mode="a",
                 maxBytes=self.max_log_file_size_MB * 1024 * 1024,
                 backupCount=5,
             )
             file_handler.setLevel(level=_file_log_level)
             file_format = JsonFormatter()
             file_handler.setFormatter(fmt=file_format)
-            file_handler.terminator = b"\n"  # type: ignore
+            file_handler.terminator = "\n"  # type: ignore
             handlers.append(file_handler)
 
         # Email handler (async)
