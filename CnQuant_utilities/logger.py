@@ -1,6 +1,6 @@
 import logging
 import orjson
-from logging.handlers import SMTPHandler, QueueHandler, QueueListener
+from logging.handlers import SMTPHandler, QueueHandler, QueueListener, RotatingFileHandler
 from datetime import datetime
 from queue import Queue
 from pathlib import Path
@@ -30,6 +30,7 @@ class AsyncLogger:
     }
 
     def __init__(
+        
         self,
         name: str,
         log_file: str | Path | None = None,
@@ -42,27 +43,38 @@ class AsyncLogger:
         email_subject: str = "",
         smtp_port: int = 587,
         log_level_for_emails: str = "critical",
+        max_log_file_size_MB: int = 10,
     ):
         """
-        Initialize a logger with console, file, and email handlers.
-
+        Initialize the logger with console, file, and optional email handlers.
         Args:
-            name: Logger name (e.g., module name).
-            log_file: Path to log file (e.g., '/app/logs/app.log').
-            log_level: Logging level (e.g., logging.INFO).
-            smtp_host: SMTP server host.
-            smtp_port: SMTP server port.
-            smtp_user: SMTP username (email).
-            smtp_password: SMTP password.
-            email_to: Comma-separated list as a string of recipient email addresses for critical logs.
-            email_subject: Subject for critical log emails.
+            name (str): Name of the logger.
+            log_file (str | Path | None, optional): Path to the log file. If None, file logging is disabled.
+            file_log_level (str, optional): Log level for file handler. Defaults to "info".
+            log_level (str, optional): Log level for console handler. Defaults to "info".
+            smtp_user (str, optional): SMTP username for email notifications. Defaults to "".
+            smtp_host (str, optional): SMTP server host for email notifications. Defaults to "".
+            smtp_password (str, optional): SMTP password for email notifications. Defaults to "".
+            email_to (str, optional): Comma-separated list of recipient email addresses. Defaults to "".
+            email_subject (str, optional): Subject for email notifications. Defaults to "".
+            smtp_port (int, optional): SMTP server port. Defaults to 587.
+            log_level_for_emails (str, optional): Log level for triggering email notifications. Defaults to "critical".
+            max_log_file_size_MB (int, optional): Maximum log file size in megabytes before rotation. Defaults to 10.
+        Raises:
+            ValueError: If log_level or file_log_level is not a valid log level.
+        Notes:
+            - Sets up console and file logging with rotation.
+            - Optionally sends critical logs via email if SMTP settings are provided.
+            - Uses asynchronous queue handlers for thread-safe logging.
         """
+        
         self.logger = logging.getLogger(name=name)
         self.log_level = log_level.lower()
         self.log_level_for_emails: str = log_level_for_emails
         self.file_log_level: str = (
             file_log_level.lower() if file_log_level is not None else "none"
         )
+        self.max_log_file_size_MB: float = max_log_file_size_MB
         self.queue = Queue()
         self.listeners = []
         handlers = []
@@ -98,7 +110,7 @@ class AsyncLogger:
         if log_file is not None:
             log_file_path = Path(log_file)
             log_file_path.parent.mkdir(parents=True, exist_ok=True)
-            file_handler = logging.FileHandler(filename=log_file_path, mode='ab')
+            file_handler = RotatingFileHandler(filename=log_file_path, mode='ab', maxBytes=self.max_log_file_size_MB * 1024 * 1024,backupCount=5)
             file_handler.setLevel(level=_file_log_level)
             file_format = JsonFormatter()
             file_handler.setFormatter(fmt=file_format)
