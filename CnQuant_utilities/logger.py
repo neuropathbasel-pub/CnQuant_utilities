@@ -21,7 +21,7 @@ class JsonFormatter(logging.Formatter):
             "level": record.levelname,
             "message": record.getMessage(),
         }
-        return orjson.dumps(log_entry)
+        return orjson.dumps(log_entry).decode("utf-8")
 
 
 class AsyncLogger:
