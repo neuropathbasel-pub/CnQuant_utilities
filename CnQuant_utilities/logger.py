@@ -123,7 +123,7 @@ class AsyncLogger:
             file_handler.setLevel(level=_file_log_level)
             file_format = JsonFormatter()
             file_handler.setFormatter(fmt=file_format)
-            file_handler.terminator = "\n"  # type: ignore
+            file_handler.terminator = "\n"
             handlers.append(file_handler)
 
         # Email handler (async)
