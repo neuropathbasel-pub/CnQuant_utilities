@@ -1,14 +1,15 @@
+import atexit
 import logging
 import orjson
+from datetime import datetime
+from queue import Queue
+from pathlib import Path
 from logging.handlers import (
     SMTPHandler,
     QueueHandler,
     QueueListener,
     RotatingFileHandler,
 )
-from datetime import datetime
-from queue import Queue
-from pathlib import Path
 
 
 class JsonFormatter(logging.Formatter):
@@ -162,6 +163,9 @@ class AsyncLogger:
             handler_levels = [h.level for h in handlers]
             min_level = min(handler_levels) if handler_levels else logging.DEBUG
             self.logger.setLevel(min_level)
+
+        self.start_async_logging()
+        atexit.register(self.stop_async_logging)
 
     def start_async_logging(self):
         """Start the asynchronous listeners."""
