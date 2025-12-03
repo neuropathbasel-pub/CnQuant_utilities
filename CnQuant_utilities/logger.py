@@ -1,5 +1,6 @@
 import atexit
 import logging
+from typing import Self
 import orjson
 from datetime import datetime
 from queue import Queue
@@ -19,6 +20,7 @@ class JsonFormatter(logging.Formatter):
 
         log_entry = {
             "time": time_str,
+            "app_name": record.name,
             "level": record.levelname,
             "message": record.getMessage(),
         }
@@ -106,7 +108,7 @@ class AsyncLogger:
         console_handler = logging.StreamHandler()
         console_handler.setLevel(level=console_log_level)
         console_format = logging.Formatter(
-            fmt="%(asctime)s - %(name)s - %(levelname)s - %(message)s"
+            fmt="%(asctime)s - app_name: %(name)s - %(levelname)s - %(message)s"
         )
         console_handler.setFormatter(fmt=console_format)
         handlers.append(console_handler)
@@ -143,7 +145,7 @@ class AsyncLogger:
                 )
                 email_handler.setLevel(level=logging.CRITICAL)
                 email_format = logging.Formatter(
-                    fmt="%(asctime)s - %(name)s - %(levelname)s\n%(pathname)s:%(lineno)d"
+                    fmt="%(asctime)s - app_name: %(name)s - %(levelname)s - %(message)s"
                 )
                 email_handler.setFormatter(fmt=email_format)
                 queue_email_handler = QueueHandler(queue=self.queue)
@@ -260,7 +262,7 @@ class Logger:
             console_handler = logging.StreamHandler()
             console_handler.setLevel(level=console_log_level)
             console_format = logging.Formatter(
-                fmt="%(asctime)s - %(name)s - %(levelname)s - %(message)s"
+                fmt="%(asctime)s - app_name: %(name)s - %(levelname)s - %(message)s"
             )
             console_handler.setFormatter(fmt=console_format)
             self.logger.addHandler(hdlr=console_handler)
@@ -274,7 +276,7 @@ class Logger:
                 file_handler.setLevel(level=_file_log_level)
 
                 file_format = logging.Formatter(
-                    fmt="%(asctime)s - %(name)s - %(levelname)s - %(message)s"
+                    fmt="%(asctime)s - app_name: %(name)s - %(levelname)s - %(message)s"
                 )
                 file_handler.setFormatter(fmt=file_format)
                 self.logger.addHandler(hdlr=file_handler)
