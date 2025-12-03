@@ -1,6 +1,5 @@
 import atexit
 import logging
-from typing import Self
 import orjson
 from datetime import datetime
 from queue import Queue
